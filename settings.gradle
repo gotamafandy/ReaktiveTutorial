@@ -1,0 +1,3 @@
+include ':android', ':core'
+
+enableFeaturePreview('GRADLE_METADATA')
