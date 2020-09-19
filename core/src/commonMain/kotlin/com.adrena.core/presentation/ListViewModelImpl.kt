@@ -1,11 +1,11 @@
 package com.adrena.core.presentation
 
-import com.adrena.core.coroutinesinterop.singleFromCoroutine
 import com.adrena.core.data.Mapper
 import com.adrena.core.data.entity.Movie
 import com.adrena.core.domain.UseCase
+import com.badoo.reaktive.coroutinesinterop.singleFromCoroutine
 import com.badoo.reaktive.observable.*
-import com.badoo.reaktive.subject.publish.publishSubject
+import com.badoo.reaktive.subject.publish.PublishSubject
 
 class ListViewModelImpl<R, E>(
     useCase: UseCase<R, List<Movie>>,
@@ -17,11 +17,11 @@ class ListViewModelImpl<R, E>(
     override val loading: Observable<Boolean>
     override val result: Observable<List<E>>
 
-    private val mListProperty = publishSubject<R>()
-    private val mLoadMoreProperty = publishSubject<R>()
+    private val mListProperty = PublishSubject<R>()
+    private val mLoadMoreProperty = PublishSubject<R>()
 
     init {
-        val loadingProperty = publishSubject<Boolean>()
+        val loadingProperty = PublishSubject<Boolean>()
 
         val items = mutableListOf<E>()
 

@@ -2,23 +2,12 @@ package com.adrena.core.data
 
 import com.adrena.core.data.entity.Movie
 import com.adrena.core.data.entity.MoviesResponse
-import com.adrena.core.data.entity.Service
-import io.ktor.client.HttpClient
-import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.features.json.serializer.KotlinxSerializer
-import io.ktor.client.features.logging.DEFAULT
-import io.ktor.client.features.logging.LogLevel
-import io.ktor.client.features.logging.Logger
-import io.ktor.client.features.logging.Logging
-import io.ktor.client.request.HttpRequestBuilder
-import io.ktor.client.request.get
-import io.ktor.client.request.header
-import io.ktor.client.request.parameter
-import io.ktor.client.response.HttpResponse
-import io.ktor.client.response.readText
-import io.ktor.http.HttpHeaders
-import io.ktor.http.takeFrom
-import kotlinx.serialization.UnstableDefault
+import io.ktor.client.*
+import io.ktor.client.features.json.*
+import io.ktor.client.features.json.serializer.*
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
+import io.ktor.http.*
 import kotlinx.serialization.json.Json
 
 class MoviesCloudService(
@@ -26,17 +15,19 @@ class MoviesCloudService(
     private val hostUrl: String,
     private val mapper: Mapper<MoviesResponse, List<Movie>>): Service<String, List<Movie>> {
 
-    @UseExperimental(UnstableDefault::class)
     override suspend fun execute(request: String?): List<Movie> {
 
-        val httpResponse = client.get<HttpResponse> {
+        val httpResponse = client.get<HttpStatement> {
             apiUrl()
             parameter("s", request)
         }
 
-        val json = httpResponse.readText()
+        val json = httpResponse.execute().readText()
 
-        val response = Json.nonstrict.parse(MoviesResponse.serializer(), json)
+        val response = Json {
+            isLenient = true
+            ignoreUnknownKeys = true
+        }.decodeFromString(MoviesResponse.serializer(), json)
 
         return mapper.transform(response)
     }
@@ -55,9 +46,17 @@ class MoviesCloudService(
         install(JsonFeature) {
             serializer = KotlinxSerializer()
         }
+
+        /**
+         * Remove logging as the latest ktor release has changed
+         * coroutines pattern usage and AwaitAll bug,
+         * Activating logging will cause crash on K/N awaitAll
+         */
+        /*
         install(Logging) {
             logger = Logger.DEFAULT
             level = LogLevel.ALL
         }
+        */
     }
 }

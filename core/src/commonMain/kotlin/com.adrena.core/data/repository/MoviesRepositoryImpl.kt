@@ -2,7 +2,7 @@ package com.adrena.core.data.repository
 
 import com.adrena.core.data.cache.Cache
 import com.adrena.core.data.entity.Movie
-import com.adrena.core.data.entity.Service
+import com.adrena.core.data.Service
 
 class MoviesRepositoryImpl<R>(
     private val service: Service<R, List<Movie>>,

@@ -1,12 +1,10 @@
 package com.adrena.reaktive.tutorial
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.adrena.core.data.MoviesCloudService
 import com.adrena.core.data.MoviesMapper
@@ -120,7 +118,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadMore() {
-        Log.d("DUDIDAM", "LOAD MORE")
         mViewModel.inputs.loadMore("avenger")
     }
 }
