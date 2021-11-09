@@ -1,0 +1,43 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-parcelize'
+
+android {
+    compileSdkVersion project.compile_sdk_version
+    buildToolsVersion project.build_tools_version
+    defaultConfig {
+        minSdkVersion project.min_sdk_version
+        targetSdkVersion project.target_sdk_version
+        versionCode 1
+        versionName "1.0"
+    }
+    configurations {
+        androidTestApi {}
+        androidTestDebugApi {}
+        androidTestReleaseApi {}
+        testApi {}
+        testDebugApi {}
+        testReleaseApi {}
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    sourceSets.each {
+        it.manifest.srcFile "src/androidMain/AndroidManifest.xml"
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+
+    // Cache
+    implementation "com.squareup.sqldelight:android-driver:$sqldelight_version"
+
+    // HTTP
+    implementation "io.ktor:ktor-client-android:$ktor_version"
+}

@@ -2,13 +2,15 @@ apply plugin: 'kotlin-multiplatform'
 apply plugin: 'kotlinx-serialization'
 apply plugin: 'com.squareup.sqldelight'
 
+apply from: 'android.gradle'
+
 group = 'com.adrena.reaktive.core'
 version = 1.0
 
 kotlin {
-    targets {
-        fromPreset(presets.jvm, 'android')
+    android()
 
+    targets {
         final def iOSTarget = System.getenv('SDK_NAME')?.startsWith("iphoneos") ? presets.iosArm64 : presets.iosX64
 
         fromPreset(iOSTarget, 'iOS') {
@@ -32,21 +34,15 @@ kotlin {
                 // HTTP
                 implementation "io.ktor:ktor-client-core:$ktor_version"
                 implementation "io.ktor:ktor-client-json:$ktor_version"
-                //implementation "io.ktor:ktor-client-logging:$ktor_version"
+                implementation "io.ktor:ktor-client-logging:$ktor_version"
                 implementation "io.ktor:ktor-client-serialization:$ktor_version"
 
                 // Reactive
                 implementation "com.badoo.reaktive:reaktive:$reactive_version"
                 implementation "com.badoo.reaktive:coroutines-interop:$reactive_version-nmtc"
-            }
-        }
 
-        androidMain {
-            dependencies {
-                implementation "com.squareup.sqldelight:android-driver:$sqldelight_version"
-
-                // HTTP
-                implementation "io.ktor:ktor-client-android:$ktor_version"
+                // Logging
+                implementation "io.github.aakira:napier:$napier_version"
             }
         }
 

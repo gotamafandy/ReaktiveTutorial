@@ -21,7 +21,6 @@ import com.badoo.reaktive.observable.observeOn
 import com.badoo.reaktive.scheduler.mainScheduler
 import com.facebook.stetho.Stetho
 import com.squareup.sqldelight.android.AndroidSqliteDriver
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mMoviesAdapter: MoviesAdapter
@@ -78,7 +77,7 @@ class MainActivity : AppCompatActivity() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
-                val manager = listing.layoutManager as LinearLayoutManager
+                val manager = mRecyclerView.layoutManager as LinearLayoutManager
 
                 val totalItemCount = manager.itemCount
                 val lastVisibleItem = manager.findLastVisibleItemPosition()
@@ -110,7 +109,7 @@ class MainActivity : AppCompatActivity() {
     private fun loading(isLoading: Boolean) {
         mIsRefreshing = isLoading
 
-        refresh_layout.isRefreshing = isLoading
+        mRefreshLayout.isRefreshing = isLoading
     }
 
     private fun result(movies: List<MovieModel>) {

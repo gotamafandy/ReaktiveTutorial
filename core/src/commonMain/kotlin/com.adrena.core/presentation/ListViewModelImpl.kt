@@ -1,9 +1,9 @@
 package com.adrena.core.presentation
 
+import com.adrena.core.coroutinesinterop.singleFromCoroutineUnsafe
 import com.adrena.core.data.Mapper
 import com.adrena.core.data.entity.Movie
 import com.adrena.core.domain.UseCase
-import com.badoo.reaktive.coroutinesinterop.singleFromCoroutine
 import com.badoo.reaktive.observable.*
 import com.badoo.reaktive.subject.publish.PublishSubject
 
@@ -32,7 +32,7 @@ class ListViewModelImpl<R, E>(
         val initialRequest = mListProperty
             .doOnBeforeNext { loadingProperty.onNext(true) }
             .flatMapSingle { request ->
-                singleFromCoroutine { useCase.execute(request) }
+                singleFromCoroutineUnsafe { useCase.execute(request) }
             }
             .doOnBeforeNext {
                 loadingProperty.onNext(false)
@@ -42,7 +42,7 @@ class ListViewModelImpl<R, E>(
         val nextRequest = mLoadMoreProperty
             .doOnBeforeNext { loadingProperty.onNext(true) }
             .flatMapSingle { request ->
-                singleFromCoroutine { useCase.execute(request) }
+                singleFromCoroutineUnsafe { useCase.execute(request) }
             }
             .doOnBeforeNext {
                 loadingProperty.onNext(false)
